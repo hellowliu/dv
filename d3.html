@@ -1,1 +1,116 @@
 <h1>hello</h1>
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+
+<!-- Example based on http://bl.ocks.org/mbostock/3887118 -->
+<!-- Tooltip example from http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html -->
+<!-- Coding style based on http://gist.github.com/mbostock/5977197 -->
+
+<style>
+  body {
+    font: 11px sans-serif;
+  }
+
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .dot {
+    stroke: #000;
+  }
+
+  .tooltip_old {
+    position: absolute;
+    width: 200px;
+    height: 28px;
+    pointer-events: none;
+  }
+
+  .tooltip {
+    position: absolute;
+    text-align: left;
+    width: 140px;
+    height: 68px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 2px;
+    border-radius: 8px;
+    pointer-events: none;
+  }
+</style>
+</style>
+
+<body>
+  <script src='https://d3js.org/d3.v5.min.js'></script>
+  <select id="selectButton"></select>
+  <script>
+    var margin = { top: 20, right: 20, bottom: 30, left: 40 },
+      width = 1024 - margin.left - margin.right,
+      height = 630 - margin.top - margin.bottom;
+
+    var yCoord = d3.scaleLog().base(10).domain([1, 150]).range([0, 200]);
+    var xCoord = d3.scaleLinear().domain([0, 80]).range([0, width - 90]);
+
+
+    var xValue = function (d) { return d.Price_in_thousands; }, // data -> value
+      xScale = d3.scaleLinear().domain([1, 220]).range([0, width - 250]), // value -> display
+      xMap = function (d) { return xScale(xValue(d)); }, // data -> display	
+      xAxis = d3.axisBottom(xCoord);
+
+
+    const distinct = (value, index, self) => { return self.indexOf(value) === index; }
+    var yValue = function (d) { return d.Sales_in_thousands; }, // data -> value
+      yScale = d3.scaleLinear().range([height, 0]), // value -> display
+      yMap = function (d) { return yScale(yValue(d)); }, // data -> display
+      yAxis = d3.axisLeft(yScale);
+
+    // setup fill color
+    var cValue = function (d) { return d.Manufacturer; },
+      color1 = d3.schemeCategory20;
+
+    //var colorScale = d3.scaleOrdinal(d3[categorical[0].name])
+    //var colorScale = d3.scaleOrdinal(d3.schemeAccent);
+    //var colorScale = d3.scaleQuantize().domain([0,30]).range(['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']);
+    //var colorScale = d3.scaleSequential(d3.interpolatePiYG);
+    //var colorScale = d3.scaleOrdinal(d3.schemeCategory20);  
+    //https://bl.ocks.org/pstuffa/3393ff2711a53975040077b7453781a9
+
+    // add the graph canvas to the body of the webpage
+    var svg = d3.select("body").append("svg")
+      .attr("width", width + margin.left + margin.right + 250)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // add the tooltip area to the webpage
+    var tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
+    async function loaddata() {
+      const data = await d3.csv("/static/car_sales.csv");
+      return data;
+    };
+
+    loaddata().then(function (data) {
+      var m1 = []
+      for (var i = 0; i < data.length; i++) {
+        data[i].Sales_in_thousands = +data[i].Sales_in_thousands;
+        data[i].Price_in_thousands = +data[i].Price_in_thousands;
+        m1.push(data[i].Manufacturer)
+      }
+      const m = m1.filter(distinct);
+      console.log(m)
+
+    }
+    );
+
+  </script>
+</body>
+
+</html>
