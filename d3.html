@@ -93,7 +93,7 @@
       .style("opacity", 0);
 
     async function loaddata() {
-      const data = await d3.csv("/static/car_sales.csv");
+      const data = await d3.csv("https://raw.githubusercontent.com/hellowliu/dv/master/static/car_sales.csv");
       return data;
     };
 
