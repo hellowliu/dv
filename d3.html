@@ -1,15 +1,58 @@
+<!--
+Auth: Yuefeng5 
+For UIUC CS 498: Data Visualization Project
+-->
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8">
-
-<!-- Example based on http://bl.ocks.org/mbostock/3887118 -->
-<!-- Tooltip example from http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html -->
-<!-- Coding style based on http://gist.github.com/mbostock/5977197 -->
-<!--
-1. add order by functon to the right bar char, e.g. order by Revenue, balse.
-2. when selected Cirle size by REvenue, auto change right side bar char
--->
 <style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 6px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+
+  .d3-tip {
+    line-height: 0;
+    position: absolute;
+    padding: 2px;
+    pointer-events: none;
+    background: white;
+    color: black;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    position: absolute;
+    font-size: 10px;
+    line-height: 3;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    text-align: center;
+  }
+
+
+
+  .d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+  }
+
   body {
     font: 11px sans-serif;
   }
@@ -32,7 +75,7 @@
 
 
   .title {
-    font: 22px sans-serif;
+    font: 28px sans-serif;
     font-weight: bold;
   }
 
@@ -53,25 +96,174 @@
   .manufacturerOptionsClass {
     position: absolute;
     left: 1180px;
-    top: 60px;
+    top: 138px;
   }
 
   .yearOptionsClass {
     position: absolute;
     left: 1310px;
-    top: 60px;
+    top: 138px;
   }
 
   .resetClass {
     position: absolute;
     left: 1440px;
-    top: 60px;
+    top: 138px;
   }
 
   .circleSizeButtonClass {
     position: absolute;
     left: 119px;
-    top: 60px;
+    top: 138px;
+  }
+
+  #slider {
+    width: 1100px;
+  }
+
+  #sliderdiv {
+    padding-left: 10px;
+  }
+
+  [slider] {
+    width: 1132px;
+    position: absolute;
+    left: 58px;
+    top: 790px;
+  }
+
+  [slider]>div {
+    position: absolute;
+    left: 20px;
+    right: 15px;
+    height: 5px;
+  }
+
+  [slider]>div>[inverse-left] {
+    position: absolute;
+    left: 0;
+    height: 5px;
+    border-radius: 10px;
+    background-color: #CCC;
+    margin: 0 7px;
+  }
+
+  [slider]>div>[inverse-right] {
+    position: absolute;
+    right: 0;
+    height: 5px;
+    border-radius: 10px;
+    background-color: #CCC;
+    margin: 0 7px;
+  }
+
+
+  [slider]>div>[range] {
+    position: absolute;
+    left: 0;
+    height: 5px;
+    border-radius: 14px;
+    background-color: #2196f3;
+  }
+
+  [slider]>div>[thumb] {
+    position: absolute;
+    top: -7px;
+    z-index: 2;
+    height: 20px;
+    width: 20px;
+    text-align: left;
+    margin-left: -11px;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+    background-color:#2196f3;
+    border-radius: 50%;
+    outline: none;
+  }
+
+  [slider]>input[type=range] {
+    position: absolute;
+    pointer-events: none;
+    -webkit-appearance: none;
+    z-index: 3;
+    height: 14px;
+    top: -2px;
+    width: 100%;
+    opacity: 0;
+  }
+
+  div[slider]>input[type=range]:focus::-webkit-slider-runnable-track {
+    background: transparent;
+    border: transparent;
+  }
+
+  div[slider]>input[type=range]:focus {
+    outline: none;
+  }
+
+  div[slider]>input[type=range]::-webkit-slider-thumb {
+    pointer-events: all;
+    width: 38px;
+    height: 48px;
+    border-radius: 0px;
+    border: 0 none;
+    background: #2196f3;
+    -webkit-appearance: none;
+  }
+
+  div[slider]>input[type=range]::-ms-fill-lower {
+    background: transparent;
+    border: 0 none;
+  }
+
+  div[slider]>input[type=range]::-ms-fill-upper {
+    background: transparent;
+    border: 0 none;
+  }
+
+  div[slider]>input[type=range]::-ms-tooltip {
+    display: none;
+  }
+
+  [slider]>div>[sign] {
+    opacity: 0;
+    position: absolute;
+    margin-left: -12px;
+    top: -39px;
+    z-index: 3;
+    background-color: #2196f3;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 28px;
+    -webkit-border-radius: 28px;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  [slider]>div>[sign]:after {
+    position: absolute;
+    content: '';
+    left: 0;
+    border-radius: 16px;
+    top: 19px;
+    border-left: 12px solid transparent;
+    border-right: 14px solid transparent;
+    border-top-width: 16px;
+    border-top-style: solid;
+    border-top-color: #2196f3;
+  }
+
+  [slider]>div>[sign]>span {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 28px;
+  }
+
+  [slider]:hover>div>[sign] {
+    opacity: 1;
   }
 </style>
 
@@ -80,20 +272,61 @@
   <meta http-equiv="Pragma" content="no-cache">
 </head>
 
-<title>testing</title>
+<title>The U.S. Vehicle Launch Analysis</title>
+
 <body>
-  <script src='https://d3js.org/d3.v5.min.js'></script>
-  <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+  <script src='https://d3js.org/d3.v5.min.js'></script> 
+
+  <!--slider refer https://stackoverflow.com/questions/4753946/html5-slider-with-two-inputs-possible-->
+  <div slider id="slider-distance">
+    <div>
+      <div inverse-left style="width:70%;"></div>
+      <div inverse-right style="width:70%;"></div>
+      <div range style="left:0%;right:0%;"></div>
+      <span thumb style="left:0%;"></span>
+      <span thumb style="left:100%;"></span>
+      <div sign style="left:0%;">
+        <span id="value">0</span>
+      </div>
+      <div sign style="left:100%;">
+        <span id="value">100</span>
+      </div>
+    </div>
+    <input type="range" id="sliderMin" value="0" max="100" min="0" step="1" oninput="
+    this.value=Math.min(this.value,this.parentNode.childNodes[5].value-1);
+    let value = (this.value/parseInt(this.max))*100
+    var children = this.parentNode.childNodes[1].childNodes;
+    children[1].style.width=value+'%';
+    children[5].style.left=value+'%';
+    children[7].style.left=value+'%';children[11].style.left=value+'%';
+    children[11].childNodes[1].innerHTML=this.value;" />
+
+    <input type="range" id="sliderMax" value="100" max="100" min="0" step="1" oninput="
+    this.value=Math.max(this.value,this.parentNode.childNodes[3].value-(-1));
+    let value = (this.value/parseInt(this.max))*100
+    var children = this.parentNode.childNodes[1].childNodes;
+    children[3].style.width=(100-value)+'%';
+    children[5].style.right=(100-value)+'%';
+    children[9].style.left=value+'%';children[13].style.left=value+'%';
+    children[13].childNodes[1].innerHTML=this.value;" />
+  </div>
+
   <select id="selectManufacturerButton"></select>
   <select id="yearButton"></select>
   <select id="circleSizeButton"></select>
+  <div id="svg"></div>
   <div id="options"></div>
+  <svg id="slider" width=1200 height=40>
+  </svg>
+
 
   <script>
-    //https://www.d3-graph-gallery.com/graph/custom_annotation.html
-    //file:///C:/Users/wayne/Downloads/annotations.html
     var initValue = 0;
     var initAnimate = 1;
+    var testMode = false
+    var duration_ = 750
+    var dataMap = {}
+    var dataFilter = {}
     const distinct = (value, index, self) => { return self.indexOf(value) === index; }
     function monthDiff(dateFrom1, dateTo1) {
       dateFrom = new Date(dateFrom1);
@@ -102,11 +335,11 @@
         (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
     }
 
-    var margin = { top: 100, right: 30, bottom: 30, left: 70 },
+    var margin = { top: 135, right: 40, bottom: 60, left: 70 },
       width = 1300 - margin.left - margin.right,
-      height = 720 - margin.top - margin.bottom;
+      height = 800 - margin.top - margin.bottom;
     var xMapList = []
-    var yMapList = []
+    var yMapList = {}
     var xValue = function (d) { return d.Price_in_thousands; }, // data -> value
       xScale = d3.scaleLinear().range([0, width - 100]), // value -> display
       xMap = function (d) {
@@ -121,16 +354,13 @@
       xAxis = d3.axisBottom(xScale);
 
     var yValue = function (d) { return d.Sales_in_thousands; }, // data -> value
-      //yScale = d3.scaleLinear().range([height, 0.1]), //   linear display
-      //yScale = d3.scaleLog().base(10).range([height, 0.1]), //log disaplay
-      //yScale = d3.scaleSqrt().range([height, 0.1]), //scaleSqrt disaplay
-      yScale = d3.scalePow().exponent(0.28).range([height, 0.1]),
+      yScale = d3.scalePow().exponent(0.28).range([height, 0]),
       yMap = function (d) {
         if (initValue == 0) {
           return height; //animate
         } else {
           y = yScale(yValue(d))
-          yMapList.push(y)
+          yMapList[y] = 0
           return y
         };
       }, // data -> display
@@ -146,18 +376,23 @@
     // add the graph canvas to the body of the webpage
     var svg = d3.select("body").append("svg")
       .attr("width", width + margin.left + margin.right + 250)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("height", height + margin.top + margin.bottom)  //.style("border","solid")
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
+    var voronoi = d3.voronoi().extent([[0, 0], [width, height]]);
+    var path = svg.append("g").attr("id", "voronoipath").selectAll("path");
     var initYearAnimateY = 300
     var initYearAnimate = svg.append("g")
+    var slider = svg.append("g")
     initYearAnimate.append("text").text("").attr("id", "year");
     initYearAnimate.append("text").text("").attr("id", "m");
+    var annotationText_ = svg.append("g")
+
+    var c10 = d3.schemePaired;
 
     var tooltip = d3.select("body").append("div")
-      .attr("class", "tooltip")
+      .attr("class", "d3-tip")
+      .attr('placement', 'auto top')
       .style("opacity", 0);
 
     var gapY = -10
@@ -172,15 +407,8 @@
       .attr("class", "subtitle")
       .text("Auto Sales Total (k)");
 
-    var titleY = -70
-    var title = svg.append("g").attr("transform", `translate(${width / 2},${titleY})`);
-    title.append("text")
-      .attr("class", "title")
-      .attr("text-anchor", "middle")
-      .text("The U.S. Vehicle Launch Analysis");
 
-    // .attr("font-weight", "bold")
-    // .style("font-size","14px")
+
 
     async function loaddata() {
       const file_url = "https://raw.githubusercontent.com/hellowliu/dv/master/static/car_sales.csv"
@@ -191,10 +419,17 @@
     //Start here, draw Circles and Leagen etc....
     loaddata().then(function (data) {
       var allManufacturer = "All Manufacturers";
-      var allLunchYears = "All Launch Years";
+      var alllaunchYears = "All Launch Years";
       var m1 = []
       var mlist1 = [allManufacturer]
-      var y1 = [allLunchYears]
+      var y1 = [alllaunchYears]
+
+      var titleY = -100
+      var title = svg.append("g").attr("transform", `translate(${width / 2},${titleY})`);
+      title = title.append("text")
+        //.style("font-size", "32px").style("opacity", 1.1).attr("class", "title")
+        .attr("text-anchor", "middle")
+        .text("The U.S. Vehicle Launch Analysis");
 
       for (var i = 0; i < data.length; i++) {
         data[i].Sales_in_thousands = +data[i].Sales_in_thousands;
@@ -202,14 +437,15 @@
         m1.push(data[i].Manufacturer)
         mlist1.push(data[i].Manufacturer)
         var d = new Date(data[i].Latest_Launch);
-        var Lunch_Year = d.getFullYear()
-        y1.push(Lunch_Year)
+        var launch_Year = (d.getFullYear())
+        y1.push(launch_Year)
         //Data transformation
-        data[i].Latest_Launch_Year = Lunch_Year
-        data[i].Revenue = data[i].Price_in_thousands * data[i].Sales_in_thousands
-        data[i].Total_Months_After_Lunch = monthDiff(data[i].Latest_Launch, '06/01/2013')
-        data[i].Monthly_Sales = data[i].Sales_in_thousands / (data[i].Total_Months_After_Lunch + 1)
+        data[i].Latest_Launch_Year = launch_Year
+        data[i].Total_sales_revenue = data[i].Price_in_thousands * data[i].Sales_in_thousands
+        data[i].Total_Months_After_launch = monthDiff(data[i].Latest_Launch, '06/01/2013')
+        data[i].Monthly_Sales = data[i].Sales_in_thousands / (data[i].Total_Months_After_launch + 1)
       }
+      dataFilter = data
       const m = m1.filter(distinct);
       var oldModelsList = m
       var newModelsList = m
@@ -218,14 +454,15 @@
 
       yearValues.sort().reverse();
 
-      //console.log(data)
-
       const colorList = ["#3957ff", "#d3fe14", "#c9080a", "#fec7f8", "#0b7b3e", "#0bf0e9", "#c203c8", "#fd9b39", "#906407", "#98ba7f", "#fe6794", "#10b0ff", "#ac7bff", "#fee7c0", "#964c63", "#1da49c", "#0ad811", "#bbd9fd", "#fe6cfe", "#297192", "#d1a09c", "#78579e", "#81ffad", "#739400", "#ca6949", "#d9bf01", "#646a58", "#d5097e", "#bb73a9", "#ccf6e9", "#9cb4b6", "#b6a7d4", "#9e8c62", "#6e83c8", "#01af64", "#a71afd", "#cfe589", "#d4ccd1", "#fd4109", "#bf8f0e", "#2f786e", "#4ed1a5", "#d8bb7d", "#a54509", "#6a9276", "#a4777a", "#fc12c9", "#606f15", "#3cc4d9", "#f31c4e", "#73616f", "#f097c6", "#fc8772", "#92a6fe", "#875b44", "#699ab3", "#94bc19", "#7d5bf0", "#d24dfe", "#c85b74", "#68ff57", "#b62347", "#994b91", "#646b8c", "#977ab4", "#d694fd", "#c4d5b5", "#fdc4bd", "#1cae05", "#7bd972", "#e9700a", "#d08f5d", "#8bb9e1", "#fde945", "#a29d98", "#1682fb", "#9ad9e0", "#d6cafe", "#8d8328", "#b091a7", "#647579", "#1f8d11", "#e7eafd", "#b9660b", "#a4a644", "#fec24c", "#b1168c", "#188cc1", "#7ab297", "#4468ae", "#c949a6", "#d48295", "#eb6dc2", "#d5b0cb", "#ff9ffb", "#fdb082", "#af4d44"]
       const colorScale = d3.scaleOrdinal().domain(m).range(colorList);
       var oldColorScale = d3.scaleOrdinal().domain(m).range(colorList);
       var newColorScale = d3.scaleOrdinal().domain(m).range(colorList);
-
-      xScale.domain([d3.min(data, xValue) - 1, d3.max(data, xValue) + 1]);
+      //xScaleMin = Math.floor(d3.min(data, xValue)) - 1
+      xScaleMin = 0
+      xScaleMax = 100
+      //xScaleMax = Math.ceil(d3.max(data, xValue)) + 1
+      xScale.domain([xScaleMin, xScaleMax]);
       yscaleMax = Math.ceil((d3.max(data, d => d.Sales_in_thousands) + 50) / 100) * 100;
       yScale.domain([d3.min(data, d => d.Sales_in_thousands), yscaleMax]);
       yAxis.tickValues([1, 5, 10, 30, 50, 70, 120, 200, 300, 450, yscaleMax])
@@ -245,35 +482,66 @@
           };
         });
 
-      var Sales_ttl_group = d3.nest()
-        .key(function (d) { return d.Manufacturer; })
-        .key(function (d) { return d.Latest_Launch_Year; })
-        .rollup(function (v) { return d3.sum(v, function (d) { return +d.Sales_in_thousands; }); })
-        .object(data);
+      var Sales_ttl_group = function (df) {
+        return d3.nest()
+          .key(function (d) { return d.Manufacturer; })
+          .key(function (d) { return d.Latest_Launch_Year; })
+          .rollup(function (v) { return d3.sum(v, function (d) { return +d.Sales_in_thousands; }); })
+          .object(df);
+      }
 
 
-      var Sales_max_by_year = d3.nest()
-        .key(function (d) { return d.Manufacturer; })
-        .key(function (d) { return d.Latest_Launch_Year; })
-        .rollup(function (v) { return d3.max(v, function (d) { return +d.Monthly_Sales; }); })
-        .object(data);
+      var Sales_max_by_year = function (df) {
+        return d3.nest()
+          .key(function (d) { return d.Manufacturer; })
+          .key(function (d) { return d.Latest_Launch_Year; })
+          .rollup(function (v) { return d3.max(v, function (d) { return +d.Monthly_Sales; }); })
+          .object(dataFilter);
+      }
 
-      var Sales_max_by_manufacturer = d3.nest()
-        .key(function (d) { return d.Manufacturer; })
-        .rollup(function (v) { return d3.max(v, function (d) { return +d.Monthly_Sales; }); })
-        .object(data);
+      var Sales_max_by_manufacturer = function (df) {
+        return d3.nest()
+          .key(function (d) { return d.Manufacturer; })
+          .rollup(function (v) { return d3.max(v, function (d) { return +d.Monthly_Sales; }); })
+          .object(dataFilter);
+      }
 
-      var Sales_ttl_group_by_model = d3.nest()
-        .key(function (d) { return d.Manufacturer; })
-        .key(function (d) { return d.Model; })
-        .key(function (d) { return d.Latest_Launch_Year; })
-        .rollup(function (v) { return d3.sum(v, function (d) { return +d.Sales_in_thousands; }); })
-        .object(data);
+
+      var Fuel_efficiency_by_year = function (df) {
+        return d3.nest()
+          .key(function (d) { return d.Manufacturer; })
+          .key(function (d) { return d.Latest_Launch_Year; })
+          .rollup(function (v) { return d3.max(v, function (d) { return +d.Fuel_efficiency; }); })
+          .object(dataFilter);
+      }
+
+      var Fuel_efficiency_by_manufacturer = function (df) {
+        return d3.nest()
+          .key(function (d) { return d.Manufacturer; })
+          .rollup(function (v) { return d3.max(v, function (d) { return +d.Fuel_efficiency; }); })
+          .object(dataFilter);
+      }
+
+      var Sales_ttl_group_by_model = function (df) {
+        return d3.nest()
+          .key(function (d) { return d.Manufacturer; })
+          .key(function (d) { return d.Model; })
+          .key(function (d) { return d.Latest_Launch_Year; })
+          .rollup(function (v) { return d3.sum(v, function (d) { return +d.Sales_in_thousands; }); })
+          .object(df);
+      }
+
 
       var models = function (manufacturer) {
-        k = Object.keys(eval('Sales_ttl_group_by_model.' + manufacturer))
-        for (var i = 0; i < k.length; i++) {
-          k[i] = manufacturer.trim() + "->" + k[i].trim()
+        //console.log('manufacturer', manufacturer)
+        //keys = eval('Sales_ttl_group_by_model(dataFilter).' + manufacturer)
+        keys = eval('Sales_ttl_group_by_model(data).' + manufacturer)
+        k = []
+        if (keys != undefined) {
+          k = Object.keys(keys)
+          for (var i = 0; i < k.length; i++) {
+            k[i] = manufacturer.trim() + "->" + k[i].trim()
+          }
         }
         return k
       }
@@ -286,31 +554,28 @@
         var dict_Key = name;
         var model
         ev = name.split("->");
-        evalString = 'Sales_ttl_group.' + name;
+        evalString = 'Sales_ttl_group(dataFilter).' + name;
         if (ev.length > 1) { //by sum by model
-          evalString = 'Sales_ttl_group_by_model.';
+          evalString = 'Sales_ttl_group_by_model(dataFilter).';
           name = ev[0].trim()
           model = ev[1].trim()
-          if (year_ != allLunchYears) { //all years model
+          if (year_ != alllaunchYears) { //all years model
             evalString = evalString + name + '["' + model + '"][' + year_ + ']'
           } else { //specify years model
             evalString = evalString + name + '["' + model + '"]'
           }
 
         } else {  //sum by manufacturer only
-          if (year_ != allLunchYears) { //all years manufacturer
-            evalString = 'Sales_ttl_group.' + name + "[" + year_ + "]"
-          } else { //specify years manufacturer
-            evalString = 'Sales_ttl_group.' + name
+          if (year_ != alllaunchYears) { //all years manufacturer
+            evalString = evalString + "[" + year_ + "]"
           }
         }
 
-        //console.log('Sales_ttl_group_by_model',Sales_ttl_group_by_model.BMW["323i"]["2011"])
 
         var sum_ = 0;
         if (name == allManufacturer) { return 0; };
         try {
-          if (year_ != allLunchYears) {
+          if (year_ != alllaunchYears) {
             sum_ = eval(evalString)
           } else {
             var s = eval(evalString);
@@ -319,7 +584,6 @@
             }
           }
         } catch (err) {
-          // console.log("GetTTL_ errors", err)
           return 0
         }
         if (sum_ == undefined) { // no data found
@@ -356,12 +620,39 @@
         return name_;
       }
 
-      addAnnotationsLayer = svg.append("g").attr("id", "annotation");
 
-      function clearAnnotations() {
-        addAnnotationsLayer.call(d3.annotation().annotations([]))
+      title.transition().duration(600).style("font-size", "32px").style("opacity", 2).attr("class", "title")
+      var mms = "monthlyMaxSail"
+      var mmsMsg = "Monthly best sale model"
+      var mf = "MostFuelEffModel"
+      var mfMsg = "Most fuel efficiency model"
+
+
+      function addannotationFuelsForFuelEfficiency(mname, year_) {
+        // Features of the annotationFuel
+        if (year_ == alllaunchYears) {
+          highestMode = dataFilter.filter(function (d) { return d.Manufacturer == mname && d.Fuel_efficiency == Fuel_efficiency_by_manufacturer(d)[mname] });
+        } else {
+          highestMode = dataFilter.filter(function (d) { return d.Manufacturer == mname && d.Latest_Launch_Year == year_ && d.Fuel_efficiency == Fuel_efficiency_by_year(d)[mname][year_] });
+        }
+        if (highestMode.length > 0) {
+          drawAnnotation(xScale(highestMode[0].Price_in_thousands), yScale(highestMode[0].Sales_in_thousands), avoidOverLap1((yScale(highestMode[0].Sales_in_thousands)), 2), 65, "#0ad811", mf, mfMsg)
+          return;
+        } else {
+          clearAnnotations1(mf)
+        }
       }
-      function xAvoidOverLap(y) {
+
+
+      function clearAnnotations1(name) {
+        svg.selectAll("#" + name).remove()
+        svg.selectAll("#" + name + "text").remove()
+
+      }
+
+
+
+      function avoidOverLap2(y) {
         var yx = -50
         foundOverlap = 1
         var loopTimes = 0;
@@ -373,7 +664,7 @@
           }
           for (var i = 0; i < yMapList.length; i++) {
             foundOverlap = 0;
-            if (Math.abs((y + yx) - yMapList[i]) < 23) {
+            if (Math.abs((y + yx) - yMapList[i]) < 30) {
               foundOverlap = 1
               if (moveType == -1) {
                 yx = yx + 5;
@@ -387,47 +678,11 @@
             }
           }
         }
-        return yx;
-      }
-
-      function XYAvoidOverLap(x, y) {
-        var yx = 0
-        foundOverlap = 1
-        var loopTimes = 0;
-        var moveType = -1;
-        var iii = 0;
-        // while (foundOverlap) {
-        //   loopTimes++
-        //   if (loopTimes > 10000) {
-        //     break;
-        //   }
-        for (var i = 0; i < yMapList.length; i++) {
-          foundOverlap = 0;
-          if (Math.abs((y + yx) - yMapList[i]) < 15) { //y found ,then check x              
-            if (Math.abs((x) - xMapList[i]) < 15) {
-              foundOverlap = 1
-              console.log('found it ', 'y', y, 'y + yx', y + yx, yMapList)
-              console.log('found it ', 'x', x, xMapList)
-              if (moveType == -1) {
-                yx = yx - 15;
-              } else {
-                yx = yx + 15;
-              }
-              if (yx < -6) {
-                moveType = 1;
-              }
-              iii = i;
-              break;
-            }
-          }
-        }
-        //}
-        yMapList[iii] = y + yx
-        console.log('return ', yx)
+        yMapList.push(y + yx)
         return y + yx;
       }
 
-      function avoidOverLap(y) {
+      function avoidOverLap1(y, t) {
         var yx = -50
         foundOverlap = 1
         var loopTimes = 0;
@@ -437,9 +692,14 @@
           if (loopTimes > 10000) {
             break;
           }
-          for (var i = 0; i < yMapList.length; i++) {
+          const keys = Object.keys(yMapList);
+          for (var i = 0; i < keys.length; i++) {
+            if (yMapList[y + yx] == t) {
+              foundOverlap = 0;
+              break;
+            }
             foundOverlap = 0;
-            if (Math.abs((y + yx) - yMapList[i]) < 23) {
+            if (Math.abs((y + yx) - keys[i]) < 30) {
               foundOverlap = 1
               if (moveType == -1) {
                 yx = yx + 5;
@@ -453,54 +713,30 @@
             }
           }
         }
-        return yx;
+        yMapList[y + yx] = t;
+        return y + yx;
       }
-      function addAnnotations(mname, year_) {
 
+
+
+
+      function addAnnotations(mname, year_) {
         // Features of the annotation
-        if (year_ == allLunchYears) {
-          highestMode = data.filter(function (d) { return d.Manufacturer == mname && d.Monthly_Sales == Sales_max_by_manufacturer[mname] });
+        if (year_ == alllaunchYears) {
+          highestMode = dataFilter.filter(function (d) { return d.Manufacturer == mname && d.Monthly_Sales == Sales_max_by_manufacturer(d)[mname] });
         } else {
-          highestMode = data.filter(function (d) { return d.Manufacturer == mname && d.Monthly_Sales == Sales_max_by_year[mname][year_] });
+          highestMode = dataFilter.filter(function (d) { return d.Manufacturer == mname && d.Latest_Launch_Year == year_ && d.Monthly_Sales == Sales_max_by_year(d)[mname][year_] });
         }
         if (highestMode.length > 0) {
-          const annotations = [
-            {
-              note: {
-                label: "Monthly best sale model",
-                title: ""
-              },
-              connector: {
-                end: "None",
-                type: "line",
-                lineType: "vertical",
-                endScale: 1
-              },
-              x: xScale(highestMode[0].Price_in_thousands),
-              y: yScale(highestMode[0].Sales_in_thousands),
-              dy: avoidOverLap(yScale(highestMode[0].Sales_in_thousands)),
-              dx: 60,
-              color: "blue"
-            }
-          ]
-
-          // Add annotation to the chart
-          const makeAnnotations = d3.annotation()
-            .annotations(annotations);
-          addAnnotationsLayer.call(makeAnnotations)
-          d3.select("#annotation").selectAll(".connector")
-            .attr('stroke', "blue")
-            .style("stroke-dasharray", ("3, 3"))
-          d3.select("#annotation").selectAll(".connector-end")
-            .attr('stroke', "blue")
-            .attr('fill', "blue")
+          drawAnnotation(xScale(highestMode[0].Price_in_thousands), yScale(highestMode[0].Sales_in_thousands), avoidOverLap1((yScale(highestMode[0].Sales_in_thousands)), 1), 72, "blue", mms, mmsMsg)
+          return;
         } else {
-          clearAnnotations();
+          clearAnnotations1(mms)
         }
       }
 
 
-      function resort_legend(mlist, selectedYear) {
+      function resortLegend(mlist, selectedYear) {
         dict = {} //reset dict         
         for (var i = 0; i < mlist.length; i++) {
           GetTTL_(mlist[i], selectedYear)  //refresh dict
@@ -513,6 +749,9 @@
         }
         return m2;
       }
+
+      
+
 
       function transformToNA(num, unit_) {
         if (num <= -1) {
@@ -528,18 +767,27 @@
         }
       }
 
+      
+      function initxScale() {
+        // if you want to reset the xscale , uncomment below
+        // sliderPrice.value([xScaleMin,xScaleMax])        
+      }
       // x-axis
-      svg.append("g")
+      var barMin = xScaleMin
+      var barMax = xScaleMax
+      var xAxisVar = svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis)
         .call(g => g.append("text")
           .attr("class", "subtitle")
-          .attr("x", width / 2 - margin.top)
-          .attr("y", margin.bottom)
+          .attr("x", (width - margin.top) / 2)
+          .attr("y", margin.bottom - 3)
           .attr("fill", "currentColor")
           .attr("text-anchor", "middle")
           .text("Vehicle Price US$ (k) →"));
+
+
 
 
       // y-axis
@@ -563,42 +811,36 @@
           return d["Manufacturer"];
         }
       };
-
-      const bv = "Revenue"
-      const circleSizeButtonValues = [bv, "Monthly_Sales", "Engine_size", "Horsepower", "Wheelbase", "Width", "Length", "Curb_weight", "Fuel_capacity", "Fuel_efficiency"]
       var engineSizeRatio = 2
+      const bv = "Total_sales_revenue"
+      const circleSizeButtonValues = ["Monthly_Sales", bv, "Engine_size", "Horsepower", "Wheelbase", "Width", "Length", "Curb_weight", "Fuel_capacity", "Fuel_efficiency", "None"]
       var Horsepower = d3.scalePow().exponent(1.5).domain([d3.min(data, d => d.Horsepower), d3.max(data, d => d.Horsepower)]).range([0.2, 3]);
-      var Fuel_efficiency = d3.scalePow().exponent(1.4).domain([d3.min(data, d => d.Fuel_efficiency), d3.max(data, d => d.Fuel_efficiency)]).range([1, 15]);
+      var Fuel_efficiency = d3.scalePow().exponent(1.3).domain([d3.min(data, d => d.Fuel_efficiency), d3.max(data, d => d.Fuel_efficiency)]).range([0.5, 20]);
       var Fuel_capacity = d3.scaleLinear().domain([d3.min(data, d => d.Fuel_capacity), d3.max(data, d => d.Fuel_capacity)]).range([1, 15]);
       var Width = d3.scalePow().exponent(6).domain([d3.min(data, d => d.Width), d3.max(data, d => d.Width)]).range([1, 12]);
       var Length = d3.scalePow().exponent(5).domain([d3.min(data, d => d.Length), d3.max(data, d => d.Length)]).range([1, 12]);
       var Wheelbase = d3.scalePow().exponent(3).domain([d3.min(data, d => d.Wheelbase), d3.max(data, d => d.Wheelbase)]).range([1, 7]);
       var Curb_weight = d3.scalePow().exponent(2.5).domain([d3.min(data, d => d.Curb_weight), d3.max(data, d => d.Curb_weight)]).range([1, 15]);
-      var Revenue = d3.scalePow().exponent(0.35).domain([d3.min(data, d => d.Revenue), d3.max(data, d => d.Revenue)]).range([2, 18]);
+      var Total_sales_revenue = d3.scalePow().exponent(0.35).domain([d3.min(data, d => d.Total_sales_revenue), d3.max(data, d => d.Total_sales_revenue)]).range([2, 18]);
       var Engine_size = d3.scalePow().exponent(0.85).domain([d3.min(data, d => d.Engine_size), d3.max(data, d => d.Engine_size)]).range([2, 15]);
       var Monthly_Sales = d3.scalePow().exponent(0.35).domain([d3.min(data, d => d.Monthly_Sales), d3.max(data, d => d.Monthly_Sales)]).range([2, 25]);
 
 
       //var byScalePo=d3.scalePow().exponent(0.35).domain([0, 180]).range([0, 22])
-      //var byRevenue = d3.scalePow().exponent(0.35).domain([0.1, 15000]).range([2, 18]);
+      //var byTotal_sales_revenue = d3.scalePow().exponent(0.35).domain([0.1, 15000]).range([2, 18]);
       var circleSize = function (d, type_) {
+        noneCircleSize = 4.5
+        if (type_ == "None") {
+          return noneCircleSize;
+        }
         v1 = eval("d." + type_)
         v = eval(type_ + "(" + v1 + ")")
-        //console.log(type_, 'v1', v1, 'v', v, d3.min(data, d => d.Monthly_Sales), d3.max(data, d => d.Monthly_Sales))
+        //to avoide data issue cause no value return, 
+        if (v == undefined) {
+          v = noneCircleSize
+        }
         return v;
       }
-
-      var Horsepower = d3.scalePow().exponent(1.5).domain([d3.min(data, d => d.Horsepower), d3.max(data, d => d.Horsepower)]).range([0.2, 3]);
-      var Fuel_efficiency = d3.scalePow().exponent(1.4).domain([d3.min(data, d => d.Fuel_efficiency), d3.max(data, d => d.Fuel_efficiency)]).range([1, 15]);
-      var Fuel_capacity = d3.scaleLinear().domain([d3.min(data, d => d.Fuel_capacity), d3.max(data, d => d.Fuel_capacity)]).range([1, 15]);
-      var Width = d3.scalePow().exponent(6).domain([d3.min(data, d => d.Width), d3.max(data, d => d.Width)]).range([1, 12]);
-      var Length = d3.scalePow().exponent(5).domain([d3.min(data, d => d.Length), d3.max(data, d => d.Length)]).range([1, 12]);
-      var Wheelbase = d3.scalePow().exponent(3).domain([d3.min(data, d => d.Wheelbase), d3.max(data, d => d.Wheelbase)]).range([1, 7]);
-      var Curb_weight = d3.scalePow().exponent(2.5).domain([d3.min(data, d => d.Curb_weight), d3.max(data, d => d.Curb_weight)]).range([1, 15]);
-      var Revenue = d3.scalePow().exponent(0.35).domain([d3.min(data, d => d.Revenue), d3.max(data, d => d.Revenue)]).range([2, 18]);
-      var Engine_size = d3.scalePow().exponent(0.85).domain([d3.min(data, d => d.Engine_size), d3.max(data, d => d.Engine_size)]).range([2, 15]);
-      var Monthly_Sales = d3.scalePow().exponent(0.35).domain([d3.min(data, d => d.Monthly_Sales), d3.max(data, d => d.Monthly_Sales)]).range([2, 25]);
-      var duration_ = 750
 
       function showToolTip(d, x, y) {
         if (x == undefined) {
@@ -607,7 +849,7 @@
         }
         tooltip.transition()
           .duration(200)
-          .style("opacity", 1.1);
+          .style("opacity", 1.1)
         tooltip.html('<strong style="background-color:DodgerBlue;color:#00003a;">' + d.Manufacturer + "</strong> - " +
           '<strong style="background-color:DodgerBlue;color:#00003a;">' + d.Model + "</strong>" +
           "<br>-Launch: " + d.Latest_Launch +
@@ -619,8 +861,8 @@
           "<br>-Length:" + d.Length +
           "<br>-Wheelbase:" + d.Wheelbase +
           "<br>-Curb weight:" + d.Curb_weight +
-          "<br>-Price: $" + d.Price_in_thousands + "K" +
-          "<br>-Total Sales:" + d.Sales_in_thousands + "K"
+          "<br>-Price: $" + d.Price_in_thousands + "k" +
+          "<br>-Total Sales:" + d.Sales_in_thousands + "k"
         )
           .style("left", x)
           .style("top", y);
@@ -633,26 +875,42 @@
           .style("opacity", 0);
       }
       var opacityCircles = 1;
+      var triggerToolTipCircleR = 60
       var drawDots = function (dataFilter, p_colorScale, circleSizeType) {
         var nsvg = svg.selectAll(".dot").data(dataFilter);
         var dots = nsvg
           .enter().append("circle")
           .style("opacity", opacityCircles)
           .attr("class", "dot")
-          // .attr("r", function (d) { return d.Engine_size * engineSizeRatio; })  // circle size based on eginesize          
           .attr("r", function (d) { return circleSize(d, circleSizeType); })  // circle size based on eginesize 
           .attr("cx", xMap)
           .attr("cy", yMap)
           .attr("id", d.Manufacturer + d.Model)
           .style("fill", function (d) { return p_colorScale(getColorScale(d)); })
-          .on("mouseover", d => showToolTip(d))
-          .on("mouseout", d => removeTooltip());
+
+        if (testMode && initValue == 1) {
+          nsvg1 = svg.selectAll(".testMode").data(dataFilter);
+          var dots1 = nsvg1
+            .enter().append("circle")
+            .attr("class", "testMode")
+            .style("opacity", 0.1)
+            .attr("class", "dot")
+            .attr("r", 5)
+            .attr("cx", xMap)
+            .attr("cy", yMap)
+            .style("fill", 'lightgray')
+            .transition().duration(duration_)
+            .attr("r", triggerToolTipCircleR)
+          nsvg1.exit().remove()
+
+        }
 
         nsvg.transition().duration(duration_)
           .attr("cx", xMap)
           .attr("cy", yMap)
-          .attr("r", function (d) { return circleSize(d, circleSizeType); })  // circle size based on eginesize 
+          .attr("r", function (d) { return circleSize(d, circleSizeType); })
           .style("fill", function (d) { return p_colorScale(getColorScale(d)); });
+
         //remove not selected data  
         circleLabelSvg.selectAll("text").remove();
 
@@ -666,7 +924,6 @@
             .enter()
             .append("text")
             .text(function (d, i) { return d.Model; })
-            //.attr("x", function (d, i) { return xCircleLabel(d); })
             .attr("x", d => xCircleLabel(d))
             .attr("y", d => xCircleLabel(d))
             .attr("font-size", "3px")
@@ -681,12 +938,140 @@
 
 
 
+        dataMap = {}
+        function vertices(d1) {
+          return (d1).map(function (d) {
+            var x = xScale(xValue(d));
+            var y = yScale(yValue(d))
+            if (dataMap[x] == undefined) {
+              dataMap[x] = {}
+            }
+            dataMap[x][y] = d;
+            return [x, y];
+          });
+        }
+        function clearTooltip4(d) {
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", 0);
+        }
+
+
+        function showToolTip4(d1) {
+          //console.log('X:',Math.ceil(d1.data[0])-d3.event.pageX,'Y:',Math.ceil(d1.data[1])-d3.event.pageY,)
+          distance = Math.ceil(Math.pow(Math.pow((d1.data[0]) - (d3.event.pageX - 77), 2) + Math.pow(d1.data[1] - (d3.event.pageY - 184), 2), 0.5));
+          if (distance > triggerToolTipCircleR) {
+            clearTooltip4();
+            return;
+          }
+
+          d = dataMap[d1.data[0]][d1.data[1]]
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", 1.1);
+          htmlbody = ""
+          if (d != undefined) {
+            htmlbody = "<table id='tooltiptable'>" +
+              "<tr style=background-color:black><th style=text-align:right;>" + '<strong style=color:white;font-size:12px;">' + d.Manufacturer + "</strong>" +
+              "</th>" + "<th>" + '<strong style=color:white;text-align:cneter;font-size:12px;">' + d.Model + "</strong>" + "</th></tr>" +
+              "<tr><th style=text-align:right;>Launch</th>" + "<th>" + d.Latest_Launch + "</th></tr>" +
+              "<tr><th style=text-align:right;>Type</th>" + "<th>" + d.Vehicle_type + "</th></tr>" +
+              "<tr><th style=text-align:right;>Engine size</th>" + "<th>" + d.Engine_size + "</th></tr>" +
+              "<tr><th style=text-align:right;>Horsepower</th>" + "<th>" + d.Horsepower + "</th></tr>" +
+              "<tr><th style=text-align:right;>Fuel efficiency</th>" + "<th>" + d.Fuel_efficiency + "</th></tr>" +
+              "<tr><th style=text-align:right;>Width</th>" + "<th>" + d.Width + "</th></tr>" +
+              "<tr><th style=text-align:right;>Length</th>" + "<th>" + d.Length + "</th></tr>" +
+              "<tr><th style=text-align:right;>Wheelbase</th>" + "<th>" + d.Wheelbase + "</th></tr>" +
+              "<tr><th style=text-align:right;>Curb weight</th>" + "<th>" + d.Curb_weight + "</th></tr>" +
+              "<tr><th style=text-align:right;>Price: US$</th>" + "<th>" + d.Price_in_thousands + "k" + "</th></tr>" +
+              "<tr><th style=text-align:right;>Total Sales</th>" + "<th>" + d.Sales_in_thousands + "k" + "</th></tr>" +
+              "</table>"
+            tooltip
+              .html(htmlbody);
+            table_length = document.getElementById("tooltiptable").offsetWidth;
+            offset = (table_length - 143) / 2
+            r = circleSize(d, circleSizeType)
+            tooltip
+              .style("left", (d1.data[0] - offset) + "px")
+              .style("top", (d1.data[1] - (120 - margin.top) - r) + "px");  //163-margin.top
+          } else {
+            console.log('Not found', d1.data[0], d1.data[1])  //will not happen here, just for test
+          }
+        }
+
+        var line = d3.line().curve(d3.curveMonotoneX)  // curveLinear, curveStep,curveStepBefore, curveStepAfter,curveBasis,curveCardinal,curveMonotoneX,curveCatmullRom, need to return return line(d) + "Z";
+        svg.selectAll("#voronoipath").remove("g")
+        var path = svg.append("g").attr("id", "voronoipath").selectAll("path");
+        path = path.data(voronoi.polygons(vertices(dataFilter)));
+        path.enter().append("path")
+          .attr("class", function (d, i) { return "q" + (i % 9) + "-9"; })
+          .attr("d", polygon)
+          .attr("class", "clip-path-circle")
+          .style("fill", "none")
+          .attr("stroke", function () { if (testMode) return "#ccc"; else return "none"; })
+          .style("pointer-events", "all")
+          .on("mouseover", d => showToolTip4(d))
+          .on("mousemove", d => showToolTip4(d))
+          .on("mouseout", d => clearTooltip4(d))
+          ;
+        //path.exit().remove();
+
+
+
+        function polygon(d) {
+          return "M" + d.join("L") + "Z"; //line.curve not impact on this
+          //return line(d) + "Z"; //use line.curve
+        }
+
         if (!initAnimate) {
           nsvg.exit().remove();
           circleLabelSvg.exit().remove()
         }
+
+        //draw line        
+
         return nsvg
       };
+
+      function drawAnnotation(x1, y1, dy, degree, color_, name, msg) {
+        var d = dataMap[x1][y1]
+        var circleSizeType = document.getElementById("circleSizeButton").value;
+        var r = circleSize(d, circleSizeType)
+        svg.selectAll("#" + name).remove()
+        var line = svg.append("g").attr("id", name).selectAll("line");
+        x1 = x1 + r / (3.141592 / 2)
+        y1 = y1 - r / (3.141592 / 2)
+        //console.log(msg.length)
+        line.data(data)
+          .enter()
+          .append("line")
+          .attr("x1", x1)
+          .attr("y1", y1)
+          .attr("x2", x1 + degree)
+          .attr("y2", dy)
+          .style("stroke-dasharray", ("3, 3"))
+          .attr("stroke-width", 0.2)
+          .attr("stroke", color_);
+        line.data(data)
+          .enter()
+          .append("line")
+          .attr("x1", x1 + degree)
+          .attr("y1", dy)
+          .attr("x2", x1 + 190 + msg.length)
+          .attr("y2", dy)
+          .attr("stroke-width", 1)
+          .attr("stroke", color_)
+        //appen text
+        annotationText_.select("#" + name + "text").remove()
+        annotationText_.append("text").attr("id", name + "text")
+          .attr("x", x1 + degree)
+          .attr("y", dy - 5)
+          .text(msg)
+          .attr("font-size", "13px")
+          .attr("fill", color_)
+          .attr("text-anchor", "left");
+
+      }
 
 
       //1)sence 1
@@ -738,7 +1123,7 @@
           .data(newColorScale.domain())
           .enter().append("g")
           .attr("class", "legend")
-          .attr("transform", function (d, i) { return "translate(0," + i * 20 + ")"; });
+          .attr("transform", function (d, i) { return "translate(20," + i * 20 + ")"; });
 
         legend.append("rect")
           .attr("x", width - 18)
@@ -746,7 +1131,9 @@
           .data(m2_)
           .style("fill", function (d, i) { return newColorScale(d); })
           .transition().duration(duration_)
-          .attr("width", function (d, i) { return setRectWidth(d, year_); });
+          .attr("width", function (d, i) { return setRectWidth(d, year_); })
+
+          ;
 
         //2) draw Manufacturer text
         legend.append("text")
@@ -758,17 +1145,17 @@
 
         // draw sales ttl
         legend.append("text")
-          .attr("x", function (d, i) { return width + 12 + sales(GetTTL_(m2_[i], year_)); })
+          .attr("x", function (d, i) { if (!isNaN(sales(GetTTL_(m2_[i], year_)))) { return width + 12 + sales(GetTTL_(m2_[i], year_)); } else { return -100; } })
           .attr("y", 9)
           .attr("dy", ".35em")
           .style("text-anchor", "end")
-          .text(function (d, i) { return transformToNA(GetTTL_(m2_[i], year_)); });
+          .text(function (d, i) { if (!isNaN(sales(GetTTL_(m2_[i], year_)))) { return transformToNA(GetTTL_(m2_[i], year_)); } else { return ""; } });
 
 
         return legend;
       };
-      m2 = resort_legend(m, allLunchYears)
-      //drawLegend(m, m2, allLunchYears, colorScale, colorScale)
+      m2 = resortLegend(m, alllaunchYears)
+      //drawLegend(m, m2, alllaunchYears, colorScale, colorScale)
 
 
       //reset button
@@ -811,62 +1198,99 @@
       var m2 = []
 
       function resetPressed() {
-        document.getElementById("circleSizeButton").value = 'Revenue';
+        document.getElementById("circleSizeButton").value = 'Monthly_Sales';
         document.getElementById("selectManufacturerButton").value = allManufacturer;
-        document.getElementById("yearButton").value = allLunchYears;
-        Startup(allLunchYears);
+        document.getElementById("yearButton").value = alllaunchYears;
+        document.getElementById("sliderMax").value = 100
+        document.getElementById("sliderMin").value = 0
+        xScaleMin = 0
+        xScaleMax = 100
+
+        xx = document.getElementById("sliderMin")
+        xx.value = Math.min(xx.value, xx.parentNode.childNodes[5].value - 1);
+        let value = (xx.value / parseInt(xx.max)) * 100
+        var children = xx.parentNode.childNodes[1].childNodes;
+        children[1].style.width = value + '%';
+        children[5].style.left = value + '%';
+        children[7].style.left = value + '%'; children[11].style.left = value + '%';
+        children[11].childNodes[1].innerHTML = 0;
+
+
+        xxMax = document.getElementById("sliderMax")
+        xxMax.value = Math.max(xxMax.value, xxMax.parentNode.childNodes[3].value - (-1));
+        value = (xxMax.value / parseInt(xxMax.max)) * 100
+        children = xxMax.parentNode.childNodes[1].childNodes;
+        children[3].style.width = (100 - value) + '%';
+        children[5].style.right = (100 - value) + '%';
+        children[9].style.left = value + '%'; children[13].style.left = value + '%';
+        children[13].childNodes[1].innerHTML = xxMax.value;
+
+        //Startup(alllaunchYears);
+        slidechange([xScaleMin, xScaleMax])
       };
 
 
-
-      function update(selectType) {
+      var newColorScale
+      function update(selectType, dataFilter_) {
         xMapList = []
         yMapList = []
         // Create new data with the selection?
         if (selectType != "C") {
-          clearAnnotations();
+          clearAnnotations1(mf);
+          clearAnnotations1(mms);
         }
         var circleValue = document.getElementById("circleSizeButton").value;
         var SelectedManufacturerName = document.getElementById("selectManufacturerButton").value;
         var selectedYear1 = document.getElementById("yearButton").value;
         var selectedYear = selectedYear1.toString();
         //console.log(SelectedManufacturerName,selectedYear)
-        var dataFilter = data
+        dataFilter = data.filter(function (d) { return d.Price_in_thousands <= barMax && d.Price_in_thousands >= barMin });
+        if (dataFilter_ != undefined) {
+          dataFilter = dataFilter_
+        }
         oldColorScale = newColorScale
         oldModelsList = newModelsList
 
         newColorScale = d3.scaleOrdinal().domain(m).range(colorList);
-        newModelsList = resort_legend(m, selectedYear)
+        newModelsList = resortLegend(m, selectedYear)
 
 
 
 
 
-        //hightestRevenueMode=dataFilter.filter(function (d) { return d.Revenue == getMaxRevenue() });
+        //hightestTotal_sales_revenueMode=dataFilter.filter(function (d) { return d.Total_sales_revenue == getMaxTotal_sales_revenue() });
         if (SelectedManufacturerName != allManufacturer) {
+          initxScale()
           dataFilter = dataFilter.filter(function (d) { return d.Manufacturer == SelectedManufacturerName });
           modelsList = models(SelectedManufacturerName) //select model                      
-          newModelsList = resort_legend(modelsList, selectedYear)
+          //newModelsList = resortLegend(modelsList, selectedYear)
+          newModelsList = resortLegend(modelsList, alllaunchYears) 
+          newModelsList.sort() //keep color consistancy
           newColorScale = d3.scaleOrdinal().domain(newModelsList).range(colorList);
+          newModelsList = resortLegend(modelsList, selectedYear) //resort the legend order
           for (var i = 0; i < dataFilter.length; i++) {
             dataFilter[i]["bymodel"] = dataFilter[i].Manufacturer.trim() + "->" + dataFilter[i].Model.trim()  // add new column to identify this is by model            
           }
           //update leagen title
           var yy = "";
-          if (selectedYear != allLunchYears) {
+          if (selectedYear != alllaunchYears) {
             yy = selectedYear
           }
           grp.selectAll("text").text(SelectedManufacturerName + " sales total by model (k)");
+          //addAnnotations(SelectedManufacturerName, selectedYear)
+          //addannotationFuelsForFuelEfficiency(SelectedManufacturerName, selectedYear)
           setTimeout(function () { addAnnotations(SelectedManufacturerName, selectedYear); }, duration_ + 10)
+          setTimeout(function () { addannotationFuelsForFuelEfficiency(SelectedManufacturerName, selectedYear); }, duration_ + 20)
         } else {
-          clearAnnotations()
+          clearAnnotations1(mf);
+          clearAnnotations1(mms);
           for (var i = 0; i < dataFilter.length; i++) {
             dataFilter[i]["bymodel"] = 'N/A'  // reset to n/a 
           }
           grp.selectAll("text").text("Sales total by manufacturers(k)");
         }
 
-        if (selectedYear != allLunchYears) {
+        if (selectedYear != alllaunchYears) {
           dataFilter = dataFilter.filter(function (d) { return d.Latest_Launch_Year == selectedYear });
         }
 
@@ -878,16 +1302,11 @@
         //update dots               
         drawDots(dataFilter, newColorScale, circleValue);
 
-        //2)update legend         
-
-        //drawLegend(m, m2, selectedYear);
+        //2)update legend                 
         if (selectType != "C") {  //select by cicle size, will not update legend and back ground info
           drawLegend(oldModelsList, newModelsList, selectedYear, oldColorScale, newColorScale);
 
         }
-
-        //   console.log('xMapList',xMapList)
-        //   console.log('yMapList',yMapList)
       }
 
       //select list
@@ -912,22 +1331,42 @@
       function Startup(year) {
         document.getElementById("yearButton").value = year;
         drawBackGroundInfo()
+        // sliderPrice.value([xScaleMin, xScaleMax])
         update("M")
       }
 
-      
-      initAnimate = 1
-      Startup(allLunchYears)
+      setTimeout(function () { Startup("2011"); }, 10)
+      setTimeout(function () { Startup("2012"); }, duration_ + 50)
+      setTimeout(function () { Startup(alllaunchYears); }, duration_ * 2 + 100)
+      setTimeout(function () { initAnimate = 0; }, duration_ * 3 + 300)
 
-      // console.log('Sales_max_by_manufacturer', Sales_max_by_year)
-
-      //scene 1
-      //scene 2
-      //scene 3
+      // Year Slider
 
 
-    }
-    );
+      //svg.selectAll("#slider").remove("g") var slider = svg.append("g").attr("id", "slider").selectAll("slider");
+      function slidechange(p) {
+        barMin = p[0]
+        barMax = p[1]
+        yMapList = []
+        dataFilter = data.filter(function (d) { return d.Price_in_thousands <= p[1] && d.Price_in_thousands >= p[0] });
+        //drawDots(dataFilter, newColorScale, "Monthly_Sales");
+        update("M", dataFilter)
+      }
+
+      d3.select("#sliderMin").on("input", function () {
+        var currentValue = this.value;
+        maxvalue = document.getElementById("sliderMax").value;
+        slidechange([currentValue, maxvalue])
+      })
+
+      d3.select("#sliderMax").on("input", function () {
+        var currentValue = this.value;
+        minvalue = document.getElementById("sliderMin").value;
+        slidechange([minvalue, currentValue])
+      })
+
+
+    })
 
   </script>
 </body>
