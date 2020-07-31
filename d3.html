@@ -1026,11 +1026,13 @@ For UIUC CS 498: Data Visualization Project
             tooltip
               .html(htmlbody);
             table_length = document.getElementById("tooltiptable").offsetWidth;
+            table_heigth = document.getElementById("tooltiptable").offsetHeight;
+            console.log('table_heigth',table_heigth)
             offset = (table_length - 143) / 2
             r = circleSize(d, circleSizeType)
             tooltip
               .style("left", (d1.data[0] - offset) + "px")
-              .style("top", (d1.data[1] - (124 - margin.top) - r) + "px");  //163-margin.top
+              .style("top", (d1.data[1] - (120 - margin.top+(table_heigth-150)) - r) + "px");  //163-margin.top
           } else {
             console.log('Not found', d1.data[0], d1.data[1])  //will not happen here, just for test
           }
