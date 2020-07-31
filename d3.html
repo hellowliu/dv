@@ -135,7 +135,7 @@ For UIUC CS 498: Data Visualization Project
   [slider]>div {
     position: absolute;
     left: 20px;
-    right: 15px;
+    right: 20px;
     height: 5px;
   }
 
@@ -145,7 +145,7 @@ For UIUC CS 498: Data Visualization Project
     height: 5px;
     border-radius: 10px;
     background-color: #CCC;
-    margin: 0 7px;
+    margin: 5 7px;
   }
 
   [slider]>div>[inverse-right] {
@@ -154,7 +154,7 @@ For UIUC CS 498: Data Visualization Project
     height: 5px;
     border-radius: 10px;
     background-color: #CCC;
-    margin: 0 7px;
+    margin: 7 5px;
   }
 
 
@@ -463,7 +463,7 @@ For UIUC CS 498: Data Visualization Project
 
       function initXYAxisValue(){
         xScaleMin = 0  // x start from 0 
-        xScaleMax = Math.ceil(d3.max(data, xValue)) + 1   //max from data             
+        xScaleMax =Math.ceil(Math.ceil(d3.max(data, xValue))/10)*10   //max from data and turn it to Decile, if max is 87.7, will become 90             
         document.getElementById("sliderMax").value = xScaleMax        
         document.getElementById("sliderMax").max = xScaleMax
         document.getElementById("sliderMax").min = xScaleMin        
