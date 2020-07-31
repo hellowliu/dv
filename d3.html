@@ -301,7 +301,7 @@ For UIUC CS 498: Data Visualization Project
     children[7].style.left=value+'%';children[11].style.left=value+'%';
     children[11].childNodes[1].innerHTML=this.value;" />
 
-    <input type="range" id="sliderMax" value="100" max="100" min="0" step="1" oninput="
+    <input type="range" id="sliderMax" value="100" max="100" min="0" step="1" oninput="    
     this.value=Math.max(this.value,this.parentNode.childNodes[3].value-(-1));
     let value = (this.value/parseInt(this.max))*100
     var children = this.parentNode.childNodes[1].childNodes;
@@ -459,8 +459,44 @@ For UIUC CS 498: Data Visualization Project
       var oldColorScale = d3.scaleOrdinal().domain(m).range(colorList);
       var newColorScale = d3.scaleOrdinal().domain(m).range(colorList);
       //xScaleMin = Math.floor(d3.min(data, xValue)) - 1
-      xScaleMin = 0
-      xScaleMax = 100
+      
+
+      function initXYAxisValue(){
+        xScaleMin = 0  // x start from 0 
+        xScaleMax = Math.ceil(d3.max(data, xValue)) + 1   //max from data             
+        document.getElementById("sliderMax").value = xScaleMax        
+        document.getElementById("sliderMax").max = xScaleMax
+        document.getElementById("sliderMax").min = xScaleMin        
+
+        document.getElementById("sliderMin").value = xScaleMin        
+        document.getElementById("sliderMin").max = xScaleMax
+        document.getElementById("sliderMin").min = xScaleMin
+        
+        xx = document.getElementById("sliderMin")     
+        xx.parentNode.childNodes[5].value=xScaleMax   
+        xx.value = Math.min(xx.value, xx.parentNode.childNodes[5].value - 1);
+        let value = (xx.value / parseInt(xx.max)) * 100
+        var children = xx.parentNode.childNodes[1].childNodes;
+        children[1].style.width = value + '%';
+        children[5].style.left = value + '%';
+        children[7].style.left = value + '%'; children[11].style.left = value + '%';
+        children[11].childNodes[1].innerHTML =  xx.value;
+        
+        xxMax = document.getElementById("sliderMax")        
+        xxMax.parentNode.childNodes[3].value=xScaleMin
+
+        xxMax.value = Math.max(xxMax.value,xxMax.parentNode.childNodes[3].value-(-1));        
+        value = (xxMax.value / parseInt(xxMax.max)) * 100
+        children = xxMax.parentNode.childNodes[1].childNodes;
+        children[3].style.width = (100 - value) + '%';
+        children[5].style.right = (100 - value) + '%';
+        children[9].style.left = value + '%'; children[13].style.left = value + '%';
+        children[13].childNodes[1].innerHTML = xxMax.value;
+      }
+      initXYAxisValue();
+
+      
+
       //xScaleMax = Math.ceil(d3.max(data, xValue)) + 1
       xScale.domain([xScaleMin, xScaleMax]);
       yscaleMax = Math.ceil((d3.max(data, d => d.Sales_in_thousands) + 50) / 100) * 100;
@@ -1203,27 +1239,7 @@ For UIUC CS 498: Data Visualization Project
         document.getElementById("yearButton").value = alllaunchYears;
         document.getElementById("sliderMax").value = 100
         document.getElementById("sliderMin").value = 0
-        xScaleMin = 0
-        xScaleMax = 100
-
-        xx = document.getElementById("sliderMin")
-        xx.value = Math.min(xx.value, xx.parentNode.childNodes[5].value - 1);
-        let value = (xx.value / parseInt(xx.max)) * 100
-        var children = xx.parentNode.childNodes[1].childNodes;
-        children[1].style.width = value + '%';
-        children[5].style.left = value + '%';
-        children[7].style.left = value + '%'; children[11].style.left = value + '%';
-        children[11].childNodes[1].innerHTML = 0;
-
-
-        xxMax = document.getElementById("sliderMax")
-        xxMax.value = Math.max(xxMax.value, xxMax.parentNode.childNodes[3].value - (-1));
-        value = (xxMax.value / parseInt(xxMax.max)) * 100
-        children = xxMax.parentNode.childNodes[1].childNodes;
-        children[3].style.width = (100 - value) + '%';
-        children[5].style.right = (100 - value) + '%';
-        children[9].style.left = value + '%'; children[13].style.left = value + '%';
-        children[13].childNodes[1].innerHTML = xxMax.value;
+        initXYAxisValue()
 
         //Startup(alllaunchYears);
         slidechange([xScaleMin, xScaleMax])
