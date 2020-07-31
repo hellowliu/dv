@@ -1078,8 +1078,8 @@ For UIUC CS 498: Data Visualization Project
         var r = circleSize(d, circleSizeType)
         svg.selectAll("#" + name).remove()
         var line = svg.append("g").attr("id", name).selectAll("line");
-        x1 = x1 + r / (3.141592 / 2)
-        y1 = y1 - r / (3.141592 / 2)
+        x1 = x1 + r / (2.95 / 2)
+        y1 = y1 - r / (2.95 / 2)
         //console.log(msg.length)
         line.data(data)
           .enter()
