@@ -1236,11 +1236,8 @@ For UIUC CS 498: Data Visualization Project
       function resetPressed() {
         document.getElementById("circleSizeButton").value = 'Monthly_Sales';
         document.getElementById("selectManufacturerButton").value = allManufacturer;
-        document.getElementById("yearButton").value = alllaunchYears;
-        document.getElementById("sliderMax").value = 100
-        document.getElementById("sliderMin").value = 0
+        document.getElementById("yearButton").value = alllaunchYears;        
         initXYAxisValue()
-
         //Startup(alllaunchYears);
         slidechange([xScaleMin, xScaleMax])
       };
@@ -1350,9 +1347,9 @@ For UIUC CS 498: Data Visualization Project
         // sliderPrice.value([xScaleMin, xScaleMax])
         update("M")
       }
-
-      setTimeout(function () { Startup("2011"); }, 10)
-      setTimeout(function () { Startup("2012"); }, duration_ + 50)
+      //only show 2 years animations
+      setTimeout(function () { Startup(yearValues[yearValues.length-1]); }, 10)
+      setTimeout(function () { Startup(yearValues[yearValues.length-2]); }, duration_ + 50)
       setTimeout(function () { Startup(alllaunchYears); }, duration_ * 2 + 100)
       setTimeout(function () { initAnimate = 0; }, duration_ * 3 + 300)
 
