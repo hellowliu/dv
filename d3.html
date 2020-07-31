@@ -24,6 +24,7 @@ For UIUC CS 498: Data Visualization Project
   }
 
   .d3-tip {
+    font-family: arial, sans-serif;
     line-height: 0;
     position: absolute;
     padding: 2px;
@@ -1029,7 +1030,7 @@ For UIUC CS 498: Data Visualization Project
             r = circleSize(d, circleSizeType)
             tooltip
               .style("left", (d1.data[0] - offset) + "px")
-              .style("top", (d1.data[1] - (123 - margin.top) - r) + "px");  //163-margin.top
+              .style("top", (d1.data[1] - (124 - margin.top) - r) + "px");  //163-margin.top
           } else {
             console.log('Not found', d1.data[0], d1.data[1])  //will not happen here, just for test
           }
