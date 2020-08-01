@@ -5,6 +5,19 @@ For UIUC CS 498: Data Visualization Project
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8">
+
+
+<script>
+  //firefox not support some slider feture here, this is best way to show the slider. in other explore will be normally to show and perform slider.
+  var browser = navigator.userAgent.toLowerCase().indexOf('firefox') > -1 ? 'firefox' : 'other';
+  console.log(browser)
+  if (browser == "firefox") {
+    document.write('<style>[slider] > input[type=range] {-webkit-appearance: none !important;-ms-appearance: none !important;-moz-appearance: none !important;-o-appearance: none !important;width: 100%;height: 30px;background:none;border-radius: 4px;border:1px solid #6e6e6e;opacity: 1;}<style>')
+  } else {
+    document.write('<style>[slider]>input[type=range] {position: absolute;pointer-events: none;-webkit-appearance: none;z-index: 3;height: 14px;top: -2px;width: 100%;opacity: 0;}</style>');
+  }	
+</script>
+
 <style>
   table {
     font-family: arial, sans-serif;
@@ -177,12 +190,12 @@ For UIUC CS 498: Data Visualization Project
     margin-left: -11px;
     cursor: pointer;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-    background-color:#2196f3;
+    background-color: #2196f3;
     border-radius: 50%;
     outline: none;
   }
 
-  [slider]>input[type=range] {
+  /* [slider]>input[type=range] {
     position: absolute;
     pointer-events: none;
     -webkit-appearance: none;
@@ -191,7 +204,7 @@ For UIUC CS 498: Data Visualization Project
     top: -2px;
     width: 100%;
     opacity: 0;
-  }
+  } */
 
   div[slider]>input[type=range]:focus::-webkit-slider-runnable-track {
     background: transparent;
@@ -276,7 +289,7 @@ For UIUC CS 498: Data Visualization Project
 <title>The U.S. Vehicle Launch Analysis</title>
 
 <body>
-  <script src='https://d3js.org/d3.v5.min.js'></script> 
+  <script src='https://d3js.org/d3.v5.min.js'></script>
 
   <!--slider refer https://stackoverflow.com/questions/4753946/html5-slider-with-two-inputs-possible-->
   <div slider id="slider-distance">
@@ -460,33 +473,33 @@ For UIUC CS 498: Data Visualization Project
       var oldColorScale = d3.scaleOrdinal().domain(m).range(colorList);
       var newColorScale = d3.scaleOrdinal().domain(m).range(colorList);
       //xScaleMin = Math.floor(d3.min(data, xValue)) - 1
-      
 
-      function initXYAxisValue(){
+
+      function initXYAxisValue() {
         xScaleMin = 0  // x start from 0 
-        xScaleMax =Math.ceil(Math.ceil(d3.max(data, xValue))/10)*10   //max from data and turn it to Decile, if max is 87.7, will become 90             
-        document.getElementById("sliderMax").value = xScaleMax        
+        xScaleMax = Math.ceil(Math.ceil(d3.max(data, xValue)) / 10) * 10   //max from data and turn it to Decile, if max is 87.7, will become 90             
+        document.getElementById("sliderMax").value = xScaleMax
         document.getElementById("sliderMax").max = xScaleMax
-        document.getElementById("sliderMax").min = xScaleMin        
+        document.getElementById("sliderMax").min = xScaleMin
 
-        document.getElementById("sliderMin").value = xScaleMin        
+        document.getElementById("sliderMin").value = xScaleMin
         document.getElementById("sliderMin").max = xScaleMax
         document.getElementById("sliderMin").min = xScaleMin
-        
-        xx = document.getElementById("sliderMin")     
-        xx.parentNode.childNodes[5].value=xScaleMax   
+
+        xx = document.getElementById("sliderMin")
+        xx.parentNode.childNodes[5].value = xScaleMax
         xx.value = Math.min(xx.value, xx.parentNode.childNodes[5].value - 1);
         let value = (xx.value / parseInt(xx.max)) * 100
         var children = xx.parentNode.childNodes[1].childNodes;
         children[1].style.width = value + '%';
         children[5].style.left = value + '%';
         children[7].style.left = value + '%'; children[11].style.left = value + '%';
-        children[11].childNodes[1].innerHTML =  xx.value;
-        
-        xxMax = document.getElementById("sliderMax")        
-        xxMax.parentNode.childNodes[3].value=xScaleMin
+        children[11].childNodes[1].innerHTML = xx.value;
 
-        xxMax.value = Math.max(xxMax.value,xxMax.parentNode.childNodes[3].value-(-1));        
+        xxMax = document.getElementById("sliderMax")
+        xxMax.parentNode.childNodes[3].value = xScaleMin
+
+        xxMax.value = Math.max(xxMax.value, xxMax.parentNode.childNodes[3].value - (-1));
         value = (xxMax.value / parseInt(xxMax.max)) * 100
         children = xxMax.parentNode.childNodes[1].childNodes;
         children[3].style.width = (100 - value) + '%';
@@ -496,7 +509,7 @@ For UIUC CS 498: Data Visualization Project
       }
       initXYAxisValue();
 
-      
+
 
       //xScaleMax = Math.ceil(d3.max(data, xValue)) + 1
       xScale.domain([xScaleMin, xScaleMax]);
@@ -787,7 +800,7 @@ For UIUC CS 498: Data Visualization Project
         return m2;
       }
 
-      
+
 
 
       function transformToNA(num, unit_) {
@@ -804,7 +817,7 @@ For UIUC CS 498: Data Visualization Project
         }
       }
 
-      
+
       function initxScale() {
         // if you want to reset the xscale , uncomment below
         // sliderPrice.value([xScaleMin,xScaleMax])        
@@ -1027,12 +1040,12 @@ For UIUC CS 498: Data Visualization Project
               .html(htmlbody);
             table_length = document.getElementById("tooltiptable").offsetWidth;
             table_heigth = document.getElementById("tooltiptable").offsetHeight;
-            console.log('table_heigth',table_heigth)
+            console.log('table_heigth', table_heigth)
             offset = (table_length - 143) / 2
             r = circleSize(d, circleSizeType)
             tooltip
               .style("left", (d1.data[0] - offset) + "px")
-              .style("top", (d1.data[1] - (120 - margin.top+(table_heigth-150)) - r) + "px");  //163-margin.top
+              .style("top", (d1.data[1] - (120 - margin.top + (table_heigth - 150)) - r) + "px");  //163-margin.top
           } else {
             console.log('Not found', d1.data[0], d1.data[1])  //will not happen here, just for test
           }
@@ -1239,7 +1252,7 @@ For UIUC CS 498: Data Visualization Project
       function resetPressed() {
         document.getElementById("circleSizeButton").value = 'Monthly_Sales';
         document.getElementById("selectManufacturerButton").value = allManufacturer;
-        document.getElementById("yearButton").value = alllaunchYears;        
+        document.getElementById("yearButton").value = alllaunchYears;
         initXYAxisValue()
         //Startup(alllaunchYears);
         slidechange([xScaleMin, xScaleMax])
@@ -1280,7 +1293,7 @@ For UIUC CS 498: Data Visualization Project
           dataFilter = dataFilter.filter(function (d) { return d.Manufacturer == SelectedManufacturerName });
           modelsList = models(SelectedManufacturerName) //select model                      
           //newModelsList = resortLegend(modelsList, selectedYear)
-          newModelsList = resortLegend(modelsList, alllaunchYears) 
+          newModelsList = resortLegend(modelsList, alllaunchYears)
           newModelsList.sort() //keep color consistancy
           newColorScale = d3.scaleOrdinal().domain(newModelsList).range(colorList);
           newModelsList = resortLegend(modelsList, selectedYear) //resort the legend order
@@ -1351,8 +1364,8 @@ For UIUC CS 498: Data Visualization Project
         update("M")
       }
       //only show 2 years animations
-      setTimeout(function () { Startup(yearValues[yearValues.length-1]); }, 10)
-      setTimeout(function () { Startup(yearValues[yearValues.length-2]); }, duration_ + 50)
+      setTimeout(function () { Startup(yearValues[yearValues.length - 1]); }, 10)
+      setTimeout(function () { Startup(yearValues[yearValues.length - 2]); }, duration_ + 50)
       setTimeout(function () { Startup(alllaunchYears); }, duration_ * 2 + 100)
       setTimeout(function () { initAnimate = 0; }, duration_ * 3 + 300)
 
