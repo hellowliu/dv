@@ -83,7 +83,8 @@ For UIUC CS 498: Data Visualization Project
   }
 
   .subtitle {
-    font: 14px sans-serif;
+    font-size: 14px;
+    font-family: arial, sans-serif;
     font-weight: bold;
   }
 
@@ -109,6 +110,8 @@ For UIUC CS 498: Data Visualization Project
 
   .manufacturerOptionsClass {
     position: absolute;
+    font-family: arial, sans-serif;
+    font-size: 12px;
     left: 1180px;
     top: 138px;
   }
@@ -116,18 +119,24 @@ For UIUC CS 498: Data Visualization Project
   .yearOptionsClass {
     position: absolute;
     left: 1310px;
+    font-family: arial, sans-serif;
+    font-size: 12px;
     top: 138px;
   }
 
   .resetClass {
     position: absolute;
     left: 1440px;
-    top: 138px;
+    font-size: 10px;
+    font-family: arial, sans-serif;
+    top: 136px;
   }
 
   .circleSizeButtonClass {
     position: absolute;
     left: 119px;
+    font-family: arial, sans-serif;
+    font-size: 12px;
     top: 138px;
   }
 
@@ -143,9 +152,9 @@ For UIUC CS 498: Data Visualization Project
     width: 1132px;
     position: absolute;
     left: 58px;
-    top: 790px;	
+    top: 790px;
   }
-  
+
   [slider]>div {
     position: absolute;
     left: 20px;
@@ -191,7 +200,7 @@ For UIUC CS 498: Data Visualization Project
     margin-left: -11px;
     cursor: pointer;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-    background-color:#2196f3;
+    background-color: #2196f3;
     border-radius: 50%;
     outline: none;
   }
@@ -207,19 +216,35 @@ For UIUC CS 498: Data Visualization Project
     opacity: 0;
   }
 
+  [slider]>input[type=range]::-moz-range-thumb {
+    position: absolute;
+    pointer-events: none;
+    -webkit-appearance: none;
+    z-index: 3;
+    height: 14px;
+    top: -2px;
+    width: 100%;
+    opacity: 0;
+  }
+
   div[slider]>input[type=range]:focus::-webkit-slider-runnable-track {
     background: transparent;
     border: transparent;
   }
-  
+
   div[slider]>input[type=range]:focus::-moz-range-track {
     background: transparent;
     border: transparent;
   }
-  
+
 
   div[slider]>input[type=range]:focus {
     outline: none;
+  }
+
+  div[slider]>input[type=range]:-moz-focusring {
+    outline: none;
+    border: 0;
   }
 
   div[slider]>input[type=range]::-webkit-slider-thumb {
@@ -231,7 +256,7 @@ For UIUC CS 498: Data Visualization Project
     background: #2196f3;
     -webkit-appearance: none;
   }
-  
+
   div[slider]>input[type=range]::-moz-range-thumb {
     pointer-events: all;
     width: 38px;
@@ -255,10 +280,10 @@ For UIUC CS 498: Data Visualization Project
   div[slider]>input[type=range]::-ms-tooltip {
     display: none;
   }
-  
-  div[slider]>input[type=range]::-moz-focus-outer{border: 0;}
-    
-  
+
+  div[slider]>input[type=range]::-moz-focus-outer {
+    border: 0;
+  }
 
   [slider]>div>[sign] {
     opacity: 0;
@@ -1203,7 +1228,7 @@ For UIUC CS 498: Data Visualization Project
           .attr("height", 18)
           .data(m2_)
           .style("fill", function (d, i) { return oldColorScale(d); })
-          .transition().duration(duration_)          
+          .transition().duration(duration_)
           .attr("width", function (d, i) { return setRectWidth(d, year_); })
           .style("fill", function (d, i) { return newColorScale(d); })
 
@@ -1405,7 +1430,7 @@ For UIUC CS 498: Data Visualization Project
       }
 
       d3.select("#sliderMin").on("input", function () {
-        var currentValue = this.value;
+        var currentValue = this.value;        
         maxvalue = document.getElementById("sliderMax").value;
         slidechange([currentValue, maxvalue])
       })
