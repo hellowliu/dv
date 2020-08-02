@@ -370,9 +370,10 @@ For UIUC CS 498: Data Visualization Project
     children[9].style.left=value+'%';children[13].style.left=value+'%';
     children[13].childNodes[1].innerHTML=this.value;" />
   </div>
-
+  
   <select id="selectManufacturerButton"></select>
   <select id="yearButton"></select>
+  
   <select id="circleSizeButton"></select>
   <div id="svg"></div>
   <div id="options"></div>
@@ -447,14 +448,17 @@ For UIUC CS 498: Data Visualization Project
     initYearAnimate.append("text").text("").attr("id", "year");
     initYearAnimate.append("text").text("").attr("id", "m");
     var annotationText_ = svg.append("g")
-
+    var datasource = svg.append("g")
     var c10 = d3.schemePaired;
 
     var tooltip = d3.select("body").append("div")
       .attr("class", "d3-tip")
       .attr('placement', 'auto top')
       .style("opacity", 0);
-
+      datasource.append("text")      
+      .text("Data source from Analytixlabs").attr("x",-60).attr("y",-80)
+      .style("font-size", "9px")
+      ;
     var gapY = -10
     var circleLabelSvg = svg.append("g");
     var circleText = svg.append("g").attr("transform", `translate(${-margin.left + 11},-34)`);
@@ -468,7 +472,7 @@ For UIUC CS 498: Data Visualization Project
       .text("Auto Sales Total (k)");
 
 
-
+ 
 
     async function loaddata() {
       const file_url = "https://raw.githubusercontent.com/hellowliu/dv/master/static/car_sales.csv"
