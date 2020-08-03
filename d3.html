@@ -6,19 +6,6 @@ For UIUC CS 498: Data Visualization Project
 <html>
 <meta charset="utf-8">
 
-
-<script>
-  //firefox not support some slider feture here, this is best way to show the slider. in other explore will be normally to show and perform slider.
- // var browser = navigator.userAgent.toLowerCase().indexOf('firefox') > -1 ? 'firefox' : 'other';
- // console.log(browser)
- // if (browser == "firefox") {
- //   document.write('<style>[slider] > input[type=range] {-webkit-appearance: none !important;-ms-appearance: none !important;-moz-appearance: none !important;-o-appearance: none !important;width: 100%;height: 30px;background:none;border-radius: 4px;border:1px solid #6e6e6e;opacity: 1;}<style>')
- // } else {
- //   document.write('<style>[slider]>input[type=range] {position: absolute;pointer-events: none;-webkit-appearance: none;z-index: 3;height: 14px;top: -2px;width: 100%;opacity: 0;}</style>');
- // }	
-</script>
-
-
 <style>
   table {
     font-family: arial, sans-serif;
@@ -86,6 +73,7 @@ For UIUC CS 498: Data Visualization Project
     font-size: 14px;
     font-family: arial, sans-serif;
     font-weight: bold;
+    opacity: 1;
   }
 
 
@@ -370,15 +358,13 @@ For UIUC CS 498: Data Visualization Project
     children[9].style.left=value+'%';children[13].style.left=value+'%';
     children[13].childNodes[1].innerHTML=this.value;" />
   </div>
-  
-  <select id="selectManufacturerButton"></select>
-  <select id="yearButton"></select>
-  
-  <select id="circleSizeButton"></select>
+
   <div id="svg"></div>
   <div id="options"></div>
-  <svg id="slider" width=1200 height=40>
-  </svg>
+  <svg id="slider" width=1200 height=40></svg>
+  <select id="selectManufacturerButton"></select>
+  <select id="yearButton"></select>
+  <select id="circleSizeButton"></select>
 
 
   <script>
@@ -455,10 +441,7 @@ For UIUC CS 498: Data Visualization Project
       .attr("class", "d3-tip")
       .attr('placement', 'auto top')
       .style("opacity", 0);
-      datasource.append("text")      
-      .text("Data source from Analytixlabs").attr("x",-60).attr("y",-80)
-      .style("font-size", "9px")
-      ;
+
     var gapY = -10
     var circleLabelSvg = svg.append("g");
     var circleText = svg.append("g").attr("transform", `translate(${-margin.left + 11},-34)`);
@@ -471,8 +454,11 @@ For UIUC CS 498: Data Visualization Project
       .attr("class", "subtitle")
       .text("Auto Sales Total (k)");
 
+    datasource.append("text")
+      .text("Data source from Analytixlabs").attr("x", -60).attr("y", -80)
+      .style("font-size", "9px")
+      ;
 
- 
 
     async function loaddata() {
       const file_url = "https://raw.githubusercontent.com/hellowliu/dv/master/static/car_sales.csv"
@@ -494,6 +480,7 @@ For UIUC CS 498: Data Visualization Project
         //.style("font-size", "32px").style("opacity", 1.1).attr("class", "title")
         .attr("text-anchor", "middle")
         .text("The U.S. Vehicle Launch Analysis");
+
 
       for (var i = 0; i < data.length; i++) {
         data[i].Sales_in_thousands = +data[i].Sales_in_thousands;
@@ -1434,7 +1421,7 @@ For UIUC CS 498: Data Visualization Project
       }
 
       d3.select("#sliderMin").on("input", function () {
-        var currentValue = this.value;        
+        var currentValue = this.value;
         maxvalue = document.getElementById("sliderMax").value;
         slidechange([currentValue, maxvalue])
       })
