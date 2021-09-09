@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProcedureUKDemo>
+	<title></title>
+    <copyright></copyright>
+	<logo></logo>     
+	<input></input>    
+	<message></message>
+	<items>
+		<record>
+			<code></code>
+			<title></title>
+			<IMO_LEXICAL_CODE></IMO_LEXICAL_CODE>
+			<IN_STREAM_INDEX></IN_STREAM_INDEX>
+			<OPCS4_CODE></OPCS4_CODE>
+			<opcs4_addl_map_flag></opcs4_addl_map_flag>
+			<LOINC_CODE></LOINC_CODE>
+			<LOINC_RELATIONSHIP_TYPE_VAL></LOINC_RELATIONSHIP_TYPE_VAL>
+			<SCT_CONCEPT_ID></SCT_CONCEPT_ID>
+			<SNOMED_DESCRIPTION></SNOMED_DESCRIPTION>
+			<CLINICIAN_TERM></CLINICIAN_TERM>
+			<TERM_TYPE></TERM_TYPE>
+			<SEARCHPAYLOAD></SEARCHPAYLOAD>
+		</record>				
+	</items>
+</ProcedureUKDemo>
